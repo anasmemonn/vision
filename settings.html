@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="isagi.jpg" type="image/jpg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Calendar - Hard Work Pays Off</title>
+  <style>
+body {
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at 50% 50%, #421f1f, #1a1a1a, #191811); /* Futuristic dark gradient */
+  color: white;
+  text-align: center;
+  padding: 20px;
+  animation: glowPulse 2s infinite ease-in-out;
+  position: relative;
+  overflow: hidden; /* Ensure no overflow due to animations */}
+
+/* Glow effect for the title */
+h1 {
+  color: #ffffff;
+  font-size: 4em;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bolder;
+  border-top: #191811;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-stretch: semi-expanded;
+  font-style:initial;
+  text-shadow: 0 0 10px rgba(255, 200, 0, 0.9), 0 0 20px rgba(255, 200, 0, 0.8);
+  animation: glowPulse 2s infinite ease-in-out;
+}
+
+/* Adding glow pulse animation */
+@keyframes glowPulse {
+  0% {
+    text-shadow: 0 0 10px rgba(255, 200, 0, 0.7), 0 0 20px rgba(255, 200, 0, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 200, 0, 0.9), 0 0 40px rgba(255, 200, 0, 1);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(255, 200, 0, 0.7), 0 0 20px rgba(255, 200, 0, 0.5);
+  }
+}
+/* Calendar dates basic styling */
+.calendar-date {
+  padding: 20px;
+  background-color: #444;
+  border-radius: 8px;
+  color: #ffcc00;
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+.calendar-date:hover {
+  background-color: #ffcc00;
+  color: black;
+  transform: scale(1.15);
+  box-shadow: 0 10px 20px rgba(255, 200, 0, 0.9);
+}
+
+/* Notes Section with wave animation */
+#notes-section {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 20px;
+  width: 320px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(255, 204, 0, 0.9), rgba(255, 240, 120, 0.9));
+  border-radius: 10px;
+  box-shadow: 0px 15px 30px rgba(255, 200, 0, 0.7);
+  transform-origin: top right;
+  animation: waveIn 1s ease forwards;
+}
+
+#notes-section.show {
+  display: block;
+  animation: none; /* Prevent the animation from resetting after the first time */
+}
+
+/* Wave animation */
+@keyframes waveIn {
+  0% {
+    transform: scaleX(0) scaleY(0.1) skewX(-20deg); /* Starts scaled down with a skew */
+  }
+  40% {
+    transform: scaleX(1.1) scaleY(1.05) skewX(10deg); /* Expands and skews to create wave effect */
+  }
+  60% {
+    transform: scaleX(0.95) scaleY(0.95) skewX(-10deg); /* Slight contraction */
+  }
+  100% {
+    transform: scaleX(1) scaleY(1) skewX(0deg); /* Restores to normal */
+  }
+}
+
+/* Text Area */
+textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  margin-bottom: 10px;
+  resize: none;
+  color: black;
+  background-color: #fff;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Button Styling */
+.button {
+  padding: 10px 15px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 16px;
+  transition: transform 0.4s, box-shadow 0.4s;
+}
+
+.button:hover {
+  transform: scale(1.15);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+}
+
+/* Calendar Container */
+#calendar-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 40px 0;
+  
+}
+
+/* Calendar Controls */
+.calendar-controls select,
+.calendar-controls button {
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  margin-right: 10px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #4CAF50, #6ce75a);
+  color: white;
+  transition: all 0.4s ease;
+  animation: glowPulse 2s infinite ease-in-out;
+}
+
+.calendar-controls button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 5px 20px rgba(76, 175, 80, 0.7);
+  background: linear-gradient(135deg, #3e8e41, #5fcc62);
+}
+
+/* Calendar Grid */
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  max-width: 700px;
+  padding: 20px;
+  background-color: #222;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  position: relative;
+  animation: glowPulse 2s infinite ease-in-out;
+}
+
+.calendar div {
+  padding: 20px;
+  background-color: #444;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  font-size: 18px;
+  color: #ffcc00;
+  position: relative;
+  animation: glowPulse 2s infinite ease-in-out;
+}
+
+.calendar div:hover {
+  background-color: #ffcc00;
+  color: black;
+  transform: scale(1.15) rotate(3deg);
+  box-shadow: 0 10px 20px rgba(12, 235, 202, 0.9), inset 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.calendar div.completed {
+  background: linear-gradient(135deg, #55ad02, #005f0b);
+  color: white;
+}
+
+/* Add glow animation on hover */
+.calendar div:hover::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 10px;
+  border: 2px solid rgba(31, 7, 111, 0.6);
+  animation: glowHover 1s infinite alternate;
+}
+
+@keyframes glowHover {
+  0% {
+    box-shadow: 0 0 5px rgba(6, 114, 222, 0.6), 0 0 10px rgba(53, 111, 6, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(221, 236, 5, 0.8), 0 0 20px rgb(0, 244, 61);
+  }
+}
+
+/* Notes Section with futuristic glow */
+#notes-section {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 20px;
+  width: 320px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(112, 90, 0, 0.9), rgba(255, 240, 120, 0.9));
+  border-radius: 10px;
+  box-shadow: 0px 15px 30px rgba(255, 200, 0, 0.7);
+  animation: slideIn 0.4s ease-in-out, glowPulse 2s infinite ease-in-out;
+  animation: glowPulse 2s infinite ease-in-out;
+}
+
+#notes-section.show {
+  display: block;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  margin-bottom: 10px;
+  resize: none;
+  color: black;
+  font-weight: bolder;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  background-color: #fff;
+  font-display:initial;
+  text-shadow: #f62727;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.button {
+  padding: 10px 15px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 16px;
+  transition: transform 0.4s, box-shadow 0.4s;
+}
+
+.button:hover {
+  transform: scale(1.15);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+}
+
+.delete-btn {
+  background-color: #f44336;
+}
+
+.delete-btn:hover {
+  background-color: #e41f1f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #calendar {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  #notes-section {
+    width: 90%;
+    right: 5%;
+  }
+
+  h1 {
+    font-size: 2.5em;
+  }
+
+  .calendar-controls select,
+  .calendar-controls button {
+    font-size: 16px;
+  }
+}
+/* Notes Section with wave animation */
+#notes-section {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 20px;
+  width: 320px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(255, 204, 0, 0.9), rgba(255, 240, 120, 0.9));
+  border-radius: 10px;
+  box-shadow: 0px 15px 30px rgba(255, 200, 0, 0.7);
+  transform-origin: top right;
+  animation: waveIn 1s ease forwards; /* Applying the wave animation */
+}
+
+#notes-section.show {
+  display: block;
+}
+
+/* Wave animation */
+@keyframes waveIn {
+  0% {
+    transform: scaleX(0) scaleY(0.1) skewX(-20deg); /* Starts scaled down with a skew */
+  }
+  40% {
+    transform: scaleX(1.1) scaleY(1.05) skewX(10deg); /* Expands and skews to create wave effect */
+  }
+  60% {
+    transform: scaleX(0.95) scaleY(0.95) skewX(-10deg); /* Slight contraction */
+  }
+  100% {
+    transform: scaleX(1) scaleY(1) skewX(0deg); /* Restores to normal */
+  }
+}
+
+/* Text Area */
+textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  margin-bottom: 10px;
+  resize: none;
+  color: black;
+  background-color: #fff;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+  /* Custom Scrollbar Styling */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--neon-purple);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--neon-pink); }
+  
+  /* Responsive adjustments for mobile devices */
+  @media (max-width: 600px) {
+    .container { padding: 1rem; }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    .input-group { grid-template-columns: 1fr auto; }
+    button { padding: 10px 20px; font-size: 0.9rem; }
+    .task-item, .note-item { flex-direction: column; align-items: flex-start; }
+    .task-item > div:last-child, .note-item > button { margin-top: 0.5rem; }
+  }
+
+  </style>
+</head>
+<body>
+
+  <h1>ROUTINE PROGRESS </h1>
+
+  <div class="calendar-controls">
+    <select id="month-select">
+      <option value="0">January</option>
+      <option value="1">February</option>
+      <option value="2">March</option>
+      <option value="3">April</option>
+      <option value="4">May</option>
+      <option value="5">June</option>
+      <option value="6">July</option>
+      <option value="7">August</option>
+      <option value="8">September</option>
+      <option value="9">October</option>
+      <option value="10">November</option>
+      <option value="11">December</option>
+    </select>
+    <button id="generate-calendar">Generate Calendar</button>
+  </div>
+
+  <div id="notes-section">
+    <h3>Notes for <span id="selected-date"></span></h3>
+    <textarea id="notes-text" rows="4" placeholder="Enter your notes..."></textarea>
+    <button class="button" id="save-notes">Save Notes</button>
+    <button class="button delete-btn" id="delete-notes">Delete Notes</button>
+    <br>
+    <input type="checkbox" id="mark-complete">
+    <label for="mark-complete">Mark as Complete</label>
+  </div>
+  
+  <div id="calendar-container">
+    <div class="calendar" id="calendar"></div>
+  </div>
+
+<script>
+  const calendar = document.getElementById('calendar');
+  const notesSection = document.getElementById('notes-section');
+  const selectedDateElem = document.getElementById('selected-date');
+  const notesText = document.getElementById('notes-text');
+  const markComplete = document.getElementById('mark-complete');
+  const saveNotesButton = document.getElementById('save-notes');
+  const deleteNotesButton = document.getElementById('delete-notes');
+  const monthSelect = document.getElementById('month-select');
+  const generateCalendarButton = document.getElementById('generate-calendar');
+
+  let selectedDate;
+  const notesData = JSON.parse(localStorage.getItem('notesData')) || {};
+  function toggleNotes() {
+  const notesSection = document.getElementById('notes-section');
+  notesSection.classList.toggle('show');
+}
+document.querySelectorAll('.calendar-date').forEach(function(dateElement) {
+    dateElement.addEventListener('click', function() {
+        // Get the notes section
+        const notesSection = document.getElementById('notes-section');
+
+        // Reset the animation (to retrigger the animation)
+        notesSection.style.display = 'none';  // Hide it briefly
+        void notesSection.offsetWidth;  // Trigger reflow to reset CSS animations
+        notesSection.style.display = 'block';  // Show again
+
+        // Apply wave animation each time a date is clicked
+        notesSection.classList.add('show');
+    });
+});
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const savedMonth = localStorage.getItem('lastOpenedMonth');
+    const currentMonth = savedMonth ? parseInt(savedMonth) : new Date().getMonth();
+    monthSelect.value = currentMonth;
+    generateCalendar(currentMonth);
+  });
+
+  generateCalendarButton.addEventListener('click', function() {
+    const selectedMonth = parseInt(monthSelect.value);
+    localStorage.setItem('lastOpenedMonth', selectedMonth);
+    generateCalendar(selectedMonth);
+  });
+
+  function generateCalendar(month) {
+    calendar.innerHTML = '';
+    const date = new Date();
+    date.setMonth(month);
+    date.setDate(1);
+    const daysInMonth = new Date(date.getFullYear(), month + 1, 0).getDate();
+    const firstDayOfWeek = date.getDay();
+
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      const emptyElement = document.createElement('div');
+      emptyElement.classList.add('empty');
+      calendar.appendChild(emptyElement);
+    }
+
+    for (let i = 1; i <= daysInMonth; i++) {
+      const dayElement = document.createElement('div');
+      dayElement.setAttribute('data-date', i);
+      dayElement.textContent = i;
+
+      if (notesData[`${month}-${i}`]?.completed) {
+        dayElement.classList.add('completed');
+      }
+
+      dayElement.addEventListener('click', function() {
+        selectedDate = `${month}-${i}`;
+        selectedDateElem.textContent = `Date ${i} (Month: ${month + 1})`;
+        notesText.value = notesData[selectedDate]?.notes || '';
+        markComplete.checked = notesData[selectedDate]?.completed || false;
+
+        // Show the notes section when a date is clicked
+        notesSection.style.display = 'block'; // Make sure notes section is displayed
+      });
+
+      calendar.appendChild(dayElement);
+    }
+  }
+document.querySelectorAll('.calendar div').forEach(function(dateElement) {
+    dateElement.addEventListener('click', function() {
+        // Get the notes section
+        const notesSection = document.getElementById('notes-section');
+
+        // Remove the 'show' class to reset the animation
+        notesSection.classList.remove('show');
+
+        // Force reflow to restart the CSS animation
+        void notesSection.offsetWidth; 
+
+        // Add the 'show' class again to trigger the animation
+        notesSection.classList.add('show');
+    });
+});
+
+  saveNotesButton.addEventListener('click', function() {
+    notesData[selectedDate] = {
+      notes: notesText.value,
+      completed: markComplete.checked
+    };
+    localStorage.setItem('notesData', JSON.stringify(notesData));
+    alert("Notes saved successfully!");
+  });
+
+  deleteNotesButton.addEventListener('click', function() {
+    delete notesData[selectedDate];
+    localStorage.setItem('notesData', JSON.stringify(notesData));
+    notesText.value = '';
+    markComplete.checked = false;
+
+    alert("Notes deleted successfully!");
+  });
+</script>
+</body>
+</html>
+
+

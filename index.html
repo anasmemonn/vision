@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <link rel="icon" href="isagi.jpg" type="image/jpg">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modern Dashboard Interface</title>
+  <style>
+    /* ====================================
+       CSS Variables & Theme Settings
+    ==================================== */
+    :root {
+      --sidebar-width: 300px;
+      --transition-speed: 0.4s;
+      --primary-accent: hsl(120, 59%, 30%);
+      --secondary-accent: hsl(330, 75%, 60%);
+      --bg-color: hsl(0, 0%, 100%);
+      --text-color: hsl(240, 10%, 20%);
+      --sidebar-bg: linear-gradient(195deg, hsl(240, 15%, 12%), hsl(240, 20%, 8%));
+      --hover-bg: hsla(230, 75%, 60%, 0.1);
+      --glass-bg: hsla(240, 10%, 98%, 0.06);
+      --shadow-lg: 0 24px 48px -12px hsla(0, 0%, 0%, 0.1);
+      --radius-xl: 24px;
+      --radius-md: 12px;
+      --radius-sm: 6px;
+      --gutter: 32px;
+    }
+    /* Dark Theme Overrides */
+    [data-theme="dark"] {
+      --bg-color: hsl(240, 15%, 8%);
+      --text-color: hsl(240, 10%, 90%);
+      --sidebar-bg: linear-gradient(195deg, hsl(240, 15%, 12%), hsl(240, 20%, 8%));
+      --glass-bg: hsla(240, 10%, 90%, 0.06);
+      --shadow-lg: 0 24px 48px -12px hsla(0, 0%, 0%, 0.3);
+    }
+
+    /* ====================================
+       Reset & Base Styles
+    ==================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-weight: 450;
+      letter-spacing: -0.01em;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ====================================
+       Sidebar Styles
+    ==================================== */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -280px; /* Hidden by default */
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: var(--sidebar-bg);
+      padding: 1.5rem;
+      transition: left var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+      border-right: 1px solid var(--glass-bg);
+    }
+    .sidebar.active {
+      left: 0;
+    }
+    .sidebar-header {
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--glass-bg);
+      margin-bottom: 1.5rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-accent);
+      border-radius: var(--radius-md);
+      display: grid;
+      place-items: center;
+    }
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .nav-item {
+      position: relative;
+      border-radius: var(--radius-md);
+      transition: background var(--transition-speed) ease;
+    }
+    .nav-item a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.95rem;
+      border-radius: var(--radius-md);
+    }
+    .nav-item:hover {
+      background: var(--hover-bg);
+    }
+    .nav-item.active {
+      background: var(--primary-accent);
+    }
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 60%;
+      background: white;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+
+    /* ====================================
+       Toggle Buttons
+    ==================================== */
+    .sidebar-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: var(--primary-accent);
+      color: white;
+      width: 45px;
+      height: 45px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1100;
+      transition: transform var(--transition-speed);
+    }
+    .sidebar-toggle:hover {
+      transform: scale(1.1);
+    }
+    .toggle-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1100;
+    }
+    .toggle-btn {
+      background: var(--glass-bg);
+      color: var(--text-color);
+      width: 45px;
+      height: 45px;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+      transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
+    }
+    .toggle-btn:hover {
+      background: var(--primary-accent);
+      color: white;
+    }
+
+    /* ====================================
+       Main Content & Iframe
+    ==================================== */
+    .content {
+      padding: 5rem 2rem 2rem;
+      transition: filter var(--transition-speed);
+    }
+    .frame-container {
+      background: var(--bg-color);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: auto;
+      min-height: 600px;
+    }
+    .frame-container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, var(--primary-accent), var(--secondary-accent));
+      opacity: 0.03;
+      pointer-events: none;
+    }
+    iframe {
+      width: 100%;
+      border: none;
+      border-radius: var(--radius-xl);
+      min-height: 600px;
+      display: block;
+    }
+
+    /* ====================================
+       Loader Animation (Rotating Hourglass)
+       This loader appears on all page navigations (including the initial load)
+    ==================================== */
+    .loading {
+      display: none; /* hidden by default */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2000;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+    .loading.show {
+      display: flex;
+    }
+    .loader-hourglass {
+      font-size: 3rem;
+      animation: rotateHourglass 1s linear infinite;
+    }
+    @keyframes rotateHourglass {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .loader-text {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    /* ====================================
+       Overlay for Sidebar
+    ==================================== */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-speed);
+      z-index: 900;
+    }
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ====================================
+       Responsive Adjustments
+    ==================================== */
+    @media (max-width: 767px) {
+      .sidebar {
+        width: 240px;
+        left: -240px;
+      }
+      .sidebar.active {
+        left: 0;
+      }
+      .sidebar-toggle,
+      .toggle-btn {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    
+  </style>
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Sidebar Toggle Button -->
+  <button class="sidebar-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- Theme Toggle Button -->
+  <div class="toggle-container">
+    <button class="toggle-btn" data-action="theme">
+      <i class="fas fa-earth"></i>
+    </button>
+  </div>
+
+  <!-- Overlay (click to hide sidebar) -->
+  <div class="overlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fas fa-rocket"></i>
+        </div>
+        <span>ANAS</span>
+      </div>
+    </div>
+    <ul class="nav-list">
+      <li class="nav-item active">
+        <a href="#" onclick="loadPage('home.html')">
+          <i class="fas fa-circle-check"></i>
+          <span>✨ ABOUT MY SELF ✨ </span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" onclick="loadPage('profile.html')">
+          <i class="fas fa-graduation-cap"></i>
+          <span>✨ Quantum Study Planner ⚡</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" onclick="loadPage('settings.html')">
+          <i class="fas fa-bars-progress"></i>
+          <span>✨ ROUTINE PROGRESS ✨ </span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" onclick="loadPage('ui.html')">
+          <i class="fas fa-chart-column"></i>
+          <span>✨ DEADLINE TRACKER ✨ </span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" onclick="loadPage('jar.html')">
+          <i class="fas fa-palette"></i>
+          <span>🚀 ✨ Cookie Jar of Achievements ✨ 🚀</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content Area -->
+  <div class="content">
+    <div class="frame-container">
+      <!-- Loader Animation (Rotating Hourglass) -->
+      <div class="loading" id="loader">
+        <i class="fas fa-hourglass-half loader-hourglass"></i>
+        <div class="loader-text">Loading</div>
+      </div>
+      <!-- Iframe for Loading Pages; note no src attribute here -->
+      <iframe id="contentFrame"></iframe>
+    </div>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.querySelector('.overlay');
+    const themeBtn = document.querySelector('[data-action="theme"]');
+    const htmlElement = document.documentElement;
+    const loader = document.getElementById('loader');
+    const frame = document.getElementById('contentFrame');
+
+    let hideTimeout;
+
+    // Toggle sidebar open/close
+    function toggleSidebar() {
+      if (sidebar.classList.contains('active')) {
+        closeSidebar();
+      } else {
+        openSidebar();
+      }
+    }
+    function openSidebar() {
+      sidebar.classList.add('active');
+      overlay.classList.add('active');
+      if (hideTimeout) clearTimeout(hideTimeout);
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+
+    // Auto-hide sidebar when cursor leaves it
+    sidebar.addEventListener('mouseleave', () => {
+      hideTimeout = setTimeout(() => {
+        if (!sidebar.matches(':hover')) {
+          closeSidebar();
+        }
+      }, 500);
+    });
+    sidebar.addEventListener('mouseenter', () => {
+      if (hideTimeout) clearTimeout(hideTimeout);
+    });
+
+    // Toggle Theme (Light/Dark)
+    function toggleTheme() {
+      const currentTheme = htmlElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      htmlElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      themeBtn.querySelector('i').className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    themeBtn.addEventListener('click', toggleTheme);
+
+    // Load a page into the iframe with a loading state and auto-resize
+    function loadPage(page) {
+      // Always show loader on any navigation
+      loader.classList.add('show');
+      frame.style.opacity = '0';
+      setTimeout(() => {
+        frame.src = page;
+        frame.onload = () => {
+          // Hide loader smoothly
+          loader.classList.remove('show');
+          frame.style.opacity = '1';
+          // Auto-resize iframe height if same-origin
+          try {
+            frame.style.height = frame.contentWindow.document.body.scrollHeight + "px";
+          } catch (e) { /* cross-origin, ignore */ }
+        };
+      }, 300);
+      closeSidebar();
+    }
+
+    // Initialize Theme from localStorage
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    htmlElement.setAttribute('data-theme', savedTheme);
+    themeBtn.querySelector('i').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+
+    // Add active class to navigation items on click
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // On initial window load, load the home page via our loader mechanism
+    window.addEventListener('load', () => {
+      loadPage('home.html');
+    });
+  </script>
+</body>
+</html>
