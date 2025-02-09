@@ -7,29 +7,38 @@
   <style>
     /* Import a modern monospaced font */
     @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
-
     :root {
       /* === Futuristic Color Palette === */
       --dark-bg: #000000; /* Deep space black */
-      --neon-purple: #00ffe1; /* Vibrant purple */
-      --neon-pink: #978011; /* Electric pink */
-      --neon-blue: #00ffff; /* Cyan blue */
-      --accent: #faf600; /* Bright teal */
-      --hologram-green: #da9475; /* Matrix green */
+      --neon-purple: #00c7ea; /* More vibrant purple */
+      --neon-magenta: #FF00FF; /* Replaced pink with neon magenta */
+      --neon-blue: #949c07a9; /* Cyan blue */
+      --accent: #00ffcc; /* Bright teal */
+      --hologram-green: #39ff14; /* More intense matrix green */
       --cyber-yellow: #ffd700; /* Futuristic gold */
-      --glow: 0 0 20px rgb(10, 95, 253); /* Base glow effect */
+      --glow: 0 0 20px rgba(229, 253, 10, 0.8); /* Base glow effect with transparency */
     
       /* === Advanced Effects === */
       --hologram-gradient: linear-gradient(
         135deg,
         var(--neon-purple) 0%,
-        var(--neon-pink) 50%,
-        var(--neon-blue) 100%
+        var(--neon-magenta) 25%, /* Updated to neon magenta */
+        var(--neon-blue) 50%,
+        var(--accent) 75%,
+        var(--hologram-green) 100%
       );
-      --neon-glow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-pink),
+      --hologram-texture: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.1) 10px,
+        rgba(255, 255, 255, 0.1) 20px
+      );
+      --neon-glow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-magenta), /* Updated to neon magenta */
         0 0 30px var(--neon-blue), 0 0 40px var(--accent);
       --pulse-animation: pulse 2s infinite ease-in-out;
       --scanline-animation: scanline 5s linear infinite;
+      --flicker-animation: flicker 3s infinite;
     
       /* === Typography & Sizing === */
       --font-primary: "Fira Code", monospace;
@@ -38,9 +47,148 @@
       --border-radius: 12px; /* Rounded futuristic edges */
       --panel-bg: rgba(0, 0, 0, 0.9); /* Semi-transparent black */
       --glass-effect: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
+      --glass-border: 1px solid rgba(255, 255, 255, 0.2); /* Glass border */
       --blur-effect: blur(10px); /* Blur for glass effect */
+    
+      /* === Additional Effects === */
+      --text-glow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 40px var(--accent);
+      --button-glow: 0 0 10px var(--neon-magenta), 0 0 20px var(--neon-magenta), 0 0 40px var(--neon-magenta), 0 0 60px var(--neon-purple); /* Updated to neon magenta */
+      --hover-glow: 0 0 15px var(--neon-purple), 0 0 30px var(--neon-purple), 0 0 60px var(--neon-purple), 0 0 90px var(--neon-blue);
+      --neon-border: 2px solid var(--neon-purple);
+      --neon-shadow: 0 0 20px var(--neon-purple), 0 0 40px var(--neon-magenta), 0 0 60px var(--neon-blue); /* Updated to neon magenta */
     }
     
+    /* === Keyframes for Animations === */
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 10px var(--neon-purple);
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.7;
+        box-shadow: 0 0 20px var(--neon-pink);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 10px var(--neon-blue);
+      }
+    }
+    
+    @keyframes scanline {
+      0% {
+        background-position: 0 0;
+        opacity: 0.8;
+      }
+      50% {
+        opacity: 0.5;
+      }
+      100% {
+        background-position: 100% 100%;
+        opacity: 0.8;
+      }
+    }
+    
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+      }
+      20%, 24%, 55% {
+        opacity: 0.5;
+      }
+    }
+    
+    /* === Example Usage === */
+    .panel {
+      background: var(--hologram-gradient), var(--hologram-texture);
+      border: var(--neon-border);
+      box-shadow: var(--neon-glow), var(--neon-shadow);
+      border-radius: var(--border-radius);
+      backdrop-filter: var(--blur-effect);
+      animation: var(--pulse-animation);
+    }
+    
+    .button {
+      background: var(--neon-pink);
+      border: var(--neon-border);
+      box-shadow: var(--button-glow);
+      color: var(--dark-bg);
+      font-family: var(--font-secondary);
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      border-radius: var(--border-radius);
+      transition: box-shadow var(--transition-speed);
+    }
+    
+    .button:hover {
+      box-shadow: var(--hover-glow);
+      animation: var(--flicker-animation);
+    }
+    
+    .text-glow {
+      text-shadow: var(--text-glow);
+      font-family: var(--font-primary);
+    }
+    
+    .glass-panel {
+      background: var(--glass-effect);
+      border: var(--glass-border);
+      backdrop-filter: var(--blur-effect);
+      border-radius: var(--border-radius);
+      padding: 20px;
+    }
+
+/* === Example Usage === */
+body {
+  background-color: var(--dark-bg);
+  color: var(--neon-blue);
+  font-family: var(--font-primary);
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-secondary);
+  text-shadow: var(--text-glow);
+}
+
+button {
+  background: var(--hologram-gradient);
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--dark-bg);
+  padding: 10px 20px;
+  font-family: var(--font-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition-speed);
+  box-shadow: var(--button-glow);
+}
+
+button:hover {
+  box-shadow: var(--hover-glow);
+  transform: scale(1.05);
+}
+
+.panel {
+  background: var(--panel-bg);
+  backdrop-filter: var(--blur-effect);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  margin: 20px;
+  box-shadow: var(--neon-glow);
+}
+
+.glass-effect {
+  background: var(--glass-effect);
+  backdrop-filter: var(--blur-effect);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  margin: 20px;
+  box-shadow: var(--neon-glow);
+}
     /* === Keyframes for Animations === */
     @keyframes pulse {
       0% {
@@ -259,7 +407,7 @@
       margin-bottom: 0.5rem;
       display: inline-block;
     }
-    .low { background: rgba(0,230,118,0.2); }
+    .low { background: rgba(1, 255, 132, 0.95); }
     .medium { background: rgba(255,214,0,0.2); }
     .high { background: rgba(255,23,68,0.2); }
 
@@ -492,658 +640,654 @@
       </div>
     </div>
   </div>
-
-    <script>
-      class DarkProductivityApp {
-        constructor() {
-          this.state = {
-            tasks: JSON.parse(localStorage.getItem('tasks')) || [],
-            notes: JSON.parse(localStorage.getItem('notes')) || [],
-            rewardPoints: parseInt(localStorage.getItem('rewardPoints')) || 0,
-            dailyPoints: parseInt(localStorage.getItem('dailyPoints')) || 0,
-            dailyDate: localStorage.getItem('dailyDate') || new Date().toLocaleDateString(),
-            dailyGoalAchieved: false
-          };
-          this.config = {
-            voiceEnabled: JSON.parse(localStorage.getItem('voiceEnabled')) ?? true
-          };
+  <script>
+    class DarkProductivityApp {
+      constructor() {
+        this.state = {
+          tasks: JSON.parse(localStorage.getItem('tasks')) || [],
+          notes: JSON.parse(localStorage.getItem('notes')) || [],
+          rewardPoints: parseInt(localStorage.getItem('rewardPoints')) || 0,
+          dailyPoints: parseInt(localStorage.getItem('dailyPoints')) || 0,
+          dailyDate: localStorage.getItem('dailyDate') || new Date().toLocaleDateString(),
+          dailyGoalAchieved: false
+        };
+        // यदि localStorage में voiceEnabled की कोई value न हो तो डिफ़ॉल्ट true रखें
+        this.config = {
+          voiceEnabled: (localStorage.getItem('voiceEnabled') === null)
+            ? true
+            : JSON.parse(localStorage.getItem('voiceEnabled'))
+        };
   
-          // Reset daily points if date changes
-          const today = new Date().toLocaleDateString();
-          if (this.state.dailyDate !== today) {
-            this.state.dailyPoints = 0;
-            this.state.dailyDate = today;
-            this.state.dailyGoalAchieved = false;
-            this.saveState();
+        // दिन बदलने पर daily points रीसेट करें
+        const today = new Date().toLocaleDateString();
+        if (this.state.dailyDate !== today) {
+          this.state.dailyPoints = 0;
+          this.state.dailyDate = today;
+          this.state.dailyGoalAchieved = false;
+          this.saveState();
+        }
+  
+        this.cacheDOM();
+        this.bindEvents();
+        this.updateUI();
+        this.updateRewardPointsDisplay();
+        this.startProgressUpdateLoop();
+        this.startBeepReminder();
+        this.initBackgroundAudio();
+        this.requestNotificationPermission();
+        this.setupVisibilityChange();
+      }
+  
+      cacheDOM() {
+        this.taskInput = document.getElementById('taskInput');
+        this.priority = document.getElementById('priority');
+        this.taskTime = document.getElementById('taskTime');
+        this.taskList = document.getElementById('taskList');
+        this.taskHistory = document.getElementById('taskHistory');
+        this.taskHistoryWrapper = document.getElementById('taskHistoryWrapper');
+        this.noteInput = document.getElementById('noteInput');
+        this.noteHistory = document.getElementById('noteHistory');
+        this.addTaskBtn = document.getElementById('addTaskBtn');
+        this.addNoteBtn = document.getElementById('addNoteBtn');
+        this.toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
+        this.toggleNotesBtn = document.getElementById('toggleNotesBtn');
+        this.settingsIcon = document.getElementById('settingsIcon');
+        this.settingsContainer = document.getElementById('settingsContainer');
+        this.clearHistoryBtn = document.getElementById('clearHistoryBtn');
+        this.resetDailyBtn = document.getElementById('resetDailyBtn');
+        this.voiceToggle = document.getElementById('voiceToggle');
+        this.dailyPointsDisplay = document.getElementById('dailyPoints');
+      }
+  
+      bindEvents() {
+        this.addTaskBtn.addEventListener('click', () => this.handleAddTask());
+        this.addNoteBtn.addEventListener('click', () => this.handleAddNote());
+        this.toggleHistoryBtn.addEventListener('click', () => this.toggleHistory());
+        this.toggleNotesBtn.addEventListener('click', () => this.toggleNotes());
+        this.settingsIcon.addEventListener('click', () => this.toggleSettings());
+        this.clearHistoryBtn.addEventListener('click', () => this.clearHistory());
+        this.resetDailyBtn.addEventListener('click', () => this.resetDailyPoints());
+        this.voiceToggle.addEventListener('change', () => {
+          this.config.voiceEnabled = this.voiceToggle.checked;
+          localStorage.setItem('voiceEnabled', JSON.stringify(this.config.voiceEnabled));
+        });
+  
+        // Active tasks पर बटन क्लिक के लिए डेलीगेट करें
+        this.taskList.addEventListener('click', (e) => {
+          if (e.target.classList.contains('complete-task')) {
+            const id = Number(e.target.dataset.id);
+            this.playSound('timer.mp3');
+            this.completeTask(id, true);
+          } else if (e.target.classList.contains('abort-task')) {
+            const id = Number(e.target.dataset.id);
+            this.abortTask(id);
+          } else if (e.target.classList.contains('edit-task')) {
+            const id = Number(e.target.dataset.id);
+            this.editTask(id);
+          } else if (e.target.classList.contains('save-task')) {
+            const id = Number(e.target.dataset.id);
+            this.saveEditedTask(id);
           }
+        });
   
-          this.cacheDOM();
-          this.bindEvents();
+        // Task history से डिलीट करने के लिए डेलीगेट करें
+        this.taskHistory.addEventListener('click', (e) => {
+          if (e.target.classList.contains('delete-task')) {
+            const id = Number(e.target.dataset.id);
+            this.deleteTask(id);
+          }
+        });
+  
+        // Notes के लिए toggle event
+        this.noteHistory.addEventListener('click', (e) => {
+          if (e.target.classList.contains('toggle-note')) {
+            const id = Number(e.target.dataset.id);
+            this.toggleNoteDecryption(id);
+          }
+        });
+  
+        // Note input के अलावा Enter key पर टास्क जोड़ें
+        document.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter' && document.activeElement !== this.noteInput) {
+            e.preventDefault();
+            this.handleAddTask();
+          }
+        });
+      }
+  
+      saveState() {
+        localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
+        localStorage.setItem('notes', JSON.stringify(this.state.notes));
+        localStorage.setItem('rewardPoints', this.state.rewardPoints);
+        localStorage.setItem('dailyPoints', this.state.dailyPoints);
+        localStorage.setItem('dailyDate', this.state.dailyDate);
+      }
+  
+      handleAddTask() {
+        const text = this.taskInput.value.trim();
+        const time = parseInt(this.taskTime.value);
+        if (!text || isNaN(time) || time <= 0) return;
+        const newTask = {
+          id: Date.now(),
+          text,
+          priority: this.priority.value,
+          time,
+          completed: false,
+          aborted: false,
+          progress: 0,
+          startTime: Date.now(),
+          endTime: Date.now() + time * 60000,
+          rewarded: false,
+          prompted: false,
+          beep50: false,
+          beep70: false,
+          beep90: false
+        };
+        this.state.tasks.push(newTask);
+        this.taskInput.value = '';
+        this.taskTime.value = '';
+        this.updateUI();
+        this.saveState();
+        this.playSound('timer.mp3');
+        this.showAchievement('Timer started! Good luck!');
+      }
+  
+      completeTask(id, manual = false) {
+        const task = this.state.tasks.find(t => t.id === id);
+        if (task && !task.completed && !task.aborted) {
+          task.completed = true;
+          task.progress = 100;
+          task.actualCompletionTime = Date.now();
+          if (!task.rewarded) {
+            this.state.rewardPoints += 20;
+            this.state.dailyPoints += 20;
+            task.rewarded = true;
+          }
           this.updateUI();
           this.updateRewardPointsDisplay();
-          this.startProgressUpdateLoop();
-          this.startBeepReminder();
-          this.initBackgroundAudio();
-          this.requestNotificationPermission();
-          this.setupVisibilityChange();
-        }
-  
-        cacheDOM() {
-          this.taskInput = document.getElementById('taskInput');
-          this.priority = document.getElementById('priority');
-          this.taskTime = document.getElementById('taskTime');
-          this.taskList = document.getElementById('taskList');
-          this.taskHistory = document.getElementById('taskHistory');
-          this.taskHistoryWrapper = document.getElementById('taskHistoryWrapper');
-          this.noteInput = document.getElementById('noteInput');
-          this.noteHistory = document.getElementById('noteHistory');
-          this.addTaskBtn = document.getElementById('addTaskBtn');
-          this.addNoteBtn = document.getElementById('addNoteBtn');
-          this.toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
-          this.toggleNotesBtn = document.getElementById('toggleNotesBtn');
-          this.settingsIcon = document.getElementById('settingsIcon');
-          this.settingsContainer = document.getElementById('settingsContainer');
-          this.clearHistoryBtn = document.getElementById('clearHistoryBtn');
-          this.resetDailyBtn = document.getElementById('resetDailyBtn');
-          this.voiceToggle = document.getElementById('voiceToggle');
-          this.rewardPointsDisplay = document.getElementById('rewardPoints');
-          this.dailyPointsDisplay = document.getElementById('dailyPoints');
-          this.notesContainer = document.getElementById('notesContainer');
-        }
-  
-        bindEvents() {
-          this.addTaskBtn.addEventListener('click', () => this.handleAddTask());
-          this.addNoteBtn.addEventListener('click', () => this.handleAddNote());
-          this.toggleHistoryBtn.addEventListener('click', () => this.toggleHistory());
-          this.toggleNotesBtn.addEventListener('click', () => this.toggleNotes());
-          this.settingsIcon.addEventListener('click', () => this.toggleSettings());
-          this.clearHistoryBtn.addEventListener('click', () => this.clearHistory());
-          this.resetDailyBtn.addEventListener('click', () => this.resetDailyPoints());
-          this.voiceToggle.addEventListener('change', () => {
-            this.config.voiceEnabled = this.voiceToggle.checked;
-            localStorage.setItem('voiceEnabled', JSON.stringify(this.config.voiceEnabled));
-          });
-  
-          // Delegate actions for active tasks
-          this.taskList.addEventListener('click', (e) => {
-            if (e.target.classList.contains('complete-task')) {
-              const id = Number(e.target.dataset.id);
-              this.playSound('timer.mp3');
-              this.completeTask(id, true);
-            } else if (e.target.classList.contains('abort-task')) {
-              const id = Number(e.target.dataset.id);
-              this.abortTask(id);
-            } else if (e.target.classList.contains('edit-task')) {
-              const id = Number(e.target.dataset.id);
-              this.editTask(id);
-            } else if (e.target.classList.contains('save-task')) {
-              const id = Number(e.target.dataset.id);
-              this.saveEditedTask(id);
-            }
-          });
-  
-          // Delegate delete event for task history items
-          this.taskHistory.addEventListener('click', (e) => {
-            if (e.target.classList.contains('delete-task')) {
-              const id = Number(e.target.dataset.id);
-              this.deleteTask(id);
-            }
-          });
-  
-          // Delegate note toggle events
-          this.noteHistory.addEventListener('click', (e) => {
-            if (e.target.classList.contains('toggle-note')) {
-              const id = Number(e.target.dataset.id);
-              this.toggleNoteDecryption(id);
-            }
-          });
-  
-          // Add task on Enter key (if not in note input)
-          document.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && document.activeElement !== this.noteInput) {
-              e.preventDefault();
-              this.handleAddTask();
-            }
-          });
-        }
-  
-        saveState() {
-          localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
-          localStorage.setItem('notes', JSON.stringify(this.state.notes));
-          localStorage.setItem('rewardPoints', this.state.rewardPoints);
-          localStorage.setItem('dailyPoints', this.state.dailyPoints);
-          localStorage.setItem('dailyDate', this.state.dailyDate);
-        }
-  
-        handleAddTask() {
-          const text = this.taskInput.value.trim();
-          const time = parseInt(this.taskTime.value);
-          if (!text || isNaN(time) || time <= 0) return;
-          const newTask = {
-            id: Date.now(),
-            text,
-            priority: this.priority.value,
-            time,
-            completed: false,
-            aborted: false,
-            progress: 0,
-            startTime: Date.now(),
-            endTime: Date.now() + time * 60000,
-            rewarded: false,
-            prompted: false,
-            beep50: false,
-            beep70: false,
-            beep90: false
-          };
-          this.state.tasks.push(newTask);
-          this.taskInput.value = '';
-          this.taskTime.value = '';
-          this.updateUI();
           this.saveState();
           this.playSound('timer.mp3');
-          this.showAchievement('Timer started! Good luck!');
+          this.showCelebration('Mission Accomplished!');
         }
+      }
   
-        completeTask(id, manual = false) {
-          const task = this.state.tasks.find(t => t.id === id);
-          if (task && !task.completed && !task.aborted) {
-            task.completed = true;
-            task.progress = 100;
-            task.actualCompletionTime = Date.now();
-            if (!task.rewarded) {
-              this.state.rewardPoints += 20;
-              this.state.dailyPoints += 20;
-              task.rewarded = true;
-            }
-            this.updateUI();
-            this.updateRewardPointsDisplay();
-            this.saveState();
-            this.playSound('timer.mp3');
-            this.showCelebration('Mission Accomplished!');
+      abortTask(id) {
+        const task = this.state.tasks.find(t => t.id === id);
+        if (task && !task.completed && !task.aborted) {
+          task.aborted = true;
+          task.abortTime = Date.now();
+          if (!task.rewarded) {
+            this.state.rewardPoints -= 20;
+            this.state.dailyPoints -= 20;
+            task.rewarded = true;
           }
-        }
-  
-        abortTask(id) {
-          const task = this.state.tasks.find(t => t.id === id);
-          if (task && !task.completed && !task.aborted) {
-            task.aborted = true;
-            task.abortTime = Date.now();
-            if (!task.rewarded) {
-              this.state.rewardPoints -= 20;
-              this.state.dailyPoints -= 20;
-              task.rewarded = true;
-            }
-            this.updateUI();
-            this.updateRewardPointsDisplay();
-            this.saveState();
-          }
-        }
-  
-        deleteTask(id) {
-          // Remove the task with the specified id
-          this.state.tasks = this.state.tasks.filter(t => t.id !== id);
           this.updateUI();
-          this.saveState();
-        }
-  
-        handleAddNote() {
-          const text = this.noteInput.value.trim();
-          if (!text) return;
-          const encryptedText = btoa(text);
-          const newNote = {
-            id: Date.now(),
-            text: encryptedText,
-            timestamp: new Date().toLocaleString(),
-            showDecrypted: false 
-          };
-          this.state.notes.unshift(newNote);
-          this.noteInput.value = '';
-          this.updateUI();
-          this.saveState();
-        }
-  
-        deleteNote(id) {
-          this.state.notes = this.state.notes.filter(note => note.id !== id);
-          this.updateUI();
-          this.saveState();
-        }
-  
-        toggleNoteDecryption(id) {
-          const note = this.state.notes.find(note => note.id === id);
-          if (note) {
-            note.showDecrypted = !note.showDecrypted;
-            this.updateUI();
-            this.saveState();
-          }
-        }
-  
-        updateRewardPointsDisplay() {
-         
-          this.dailyPointsDisplay.textContent = `Daily Points: ${this.state.dailyPoints}/100`;
-          if (this.state.dailyPoints >= 100 && !this.state.dailyGoalAchieved) {
-            this.showAchievement('Daily Goal Achieved!');
-            this.state.dailyGoalAchieved = true;
-          }
-        }
-  
-        getRemainingTimeText(task) {
-          const now = Date.now();
-          const remaining = Math.max(task.endTime - now, 0);
-          const minutes = Math.floor(remaining / 60000);
-          const seconds = Math.floor((remaining % 60000) / 1000);
-          return `${minutes} min ${seconds} sec remaining`;
-        }
-  
-        renderActiveTasks() {
-          const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
-          if (activeTasks.length === 0) {
-            this.taskList.innerHTML = `<p class="empty">No active missions. Add one!</p>`;
-            return;
-          }
-          this.taskList.innerHTML = activeTasks.map(task => `
-            <div class="task-item" data-id="${task.id}">
-              <div>
-                <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
-                <span class="task-text" id="taskText-${task.id}">${task.text}</span>
-                <input type="text" class="edit-input" id="editInput-${task.id}" style="display:none;" value="${task.text}">
-                <div class="deadline" id="deadline-${task.id}">
-                  ${this.getRemainingTimeText(task)}
-                </div>
-                <div class="progress-bar">
-                  <div class="progress" id="progress-${task.id}" style="width: ${task.progress}%"></div>
-                </div>
-              </div>
-              <div>
-                <button class="complete-task" data-id="${task.id}">✓</button>
-                <button class="abort-task" data-id="${task.id}">✕</button>
-                <button class="edit-task" data-id="${task.id}">Edit</button>
-                <button class="save-task" data-id="${task.id}" style="display:none;">Save</button>
-              </div>
-            </div>
-          `).join('');
-        }
-  
-        renderTaskHistory() {
-          const historyTasks = this.state.tasks.filter(task => task.completed || task.aborted);
-          if (historyTasks.length === 0) {
-            this.taskHistory.innerHTML = `<p class="empty">No completed or aborted missions yet.</p>`;
-            return;
-          }
-          this.taskHistory.innerHTML = historyTasks.map(task => {
-            let timingInfo = '';
-            if (task.completed && task.actualCompletionTime) {
-              const diff = task.actualCompletionTime - task.startTime;
-              const minutes = Math.floor(diff / 60000);
-              const seconds = Math.floor((diff % 60000) / 1000);
-            timingInfo = `Completed in ${minutes} min ${seconds} sec from ${task.time} min`;
-
-            } else if (task.aborted) {
-              timingInfo = 'Aborted at ' + new Date(task.abortTime).toLocaleTimeString();
-            }
-            return `
-            <div class="task-item ${task.completed ? 'completed' : 'aborted'}" data-id="${task.id}">
-              <div>
-                <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
-                <span>${task.text}</span>
-                <div class="extra-details">
-                  <div>Started: ${new Date(task.startTime).toLocaleString()}</div>
-                  <div>${timingInfo}</div>
-                </div>
-              </div>
-              <div>
-                <button class="delete-task" data-id="${task.id}">✕</button>
-              </div>
-            </div>
-          `;
-          }).join('');
-        }
-  
-        renderNotes() {
-          if (this.state.notes.length === 0) {
-            this.noteHistory.innerHTML = `<p class="empty">No encrypted notes yet.</p>`;
-            return;
-          }
-          this.noteHistory.innerHTML = this.state.notes.map(note => `
-            <div class="note-item" data-id="${note.id}">
-              <div>
-                <div class="timestamp">${note.timestamp}</div>
-                <div>${note.showDecrypted ? atob(note.text) : note.text}</div>
-              </div>
-              <button class="toggle-note" data-id="${note.id}">${note.showDecrypted ? 'Hide' : 'Show'}</button>
-            </div>
-          `).join('');
-        }
-  
-        updateUI() {
-          this.renderActiveTasks();
-          this.renderTaskHistory();
-          this.renderNotes();
-        }
-  
-        toggleHistory() {
-          if (this.taskHistoryWrapper.classList.contains('open')) {
-            this.taskHistoryWrapper.classList.remove('open');
-            this.toggleHistoryBtn.textContent = "Show Task History";
-          } else {
-            this.taskHistoryWrapper.classList.add('open');
-            this.toggleHistoryBtn.textContent = "Hide Task History";
-          }
-        }
-  
-        toggleNotes() {
-          if (this.notesContainer.style.display === "none") {
-            this.notesContainer.style.display = "block";
-            this.toggleNotesBtn.textContent = "Hide Notes";
-          } else {
-            this.notesContainer.style.display = "none";
-            this.toggleNotesBtn.textContent = "Show Notes";
-          }
-        }
-  
-        toggleSettings() {
-          if (this.settingsContainer.style.display === "none") {
-            this.settingsContainer.style.display = "block";
-          } else {
-            this.settingsContainer.style.display = "none";
-          }
-        }
-  
-        clearHistory() {
-          // Remove all completed and aborted tasks
-          this.state.tasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
-          this.updateUI();
-          this.saveState();
-          this.showAchievement('Task history cleared!');
-        }
-  
-        resetDailyPoints() {
-          this.state.dailyPoints = 0;
-          this.state.dailyGoalAchieved = false;
           this.updateRewardPointsDisplay();
           this.saveState();
-          this.showAchievement('Daily points reset!');
         }
+      }
   
-        editTask(id) {
-          const taskTextElem = document.getElementById(`taskText-${id}`);
-          const editInput = document.getElementById(`editInput-${id}`);
-          const editBtn = document.querySelector(`.edit-task[data-id="${id}"]`);
-          const saveBtn = document.querySelector(`.save-task[data-id="${id}"]`);
-          if (taskTextElem && editInput && editBtn && saveBtn) {
-            taskTextElem.style.display = "none";
-            editInput.style.display = "inline-block";
-            editBtn.style.display = "none";
-            saveBtn.style.display = "inline-block";
+      deleteTask(id) {
+        this.state.tasks = this.state.tasks.filter(t => t.id !== id);
+        this.updateUI();
+        this.saveState();
+      }
+  
+      handleAddNote() {
+        const text = this.noteInput.value.trim();
+        if (!text) return;
+        const encryptedText = btoa(text);
+        const newNote = {
+          id: Date.now(),
+          text: encryptedText,
+          timestamp: new Date().toLocaleString(),
+          showDecrypted: false 
+        };
+        this.state.notes.unshift(newNote);
+        this.noteInput.value = '';
+        this.updateUI();
+        this.saveState();
+      }
+  
+      deleteNote(id) {
+        this.state.notes = this.state.notes.filter(note => note.id !== id);
+        this.updateUI();
+        this.saveState();
+      }
+  
+      toggleNoteDecryption(id) {
+        const note = this.state.notes.find(note => note.id === id);
+        if (note) {
+          note.showDecrypted = !note.showDecrypted;
+          this.updateUI();
+          this.saveState();
+        }
+      }
+  
+      updateRewardPointsDisplay() {
+        this.dailyPointsDisplay.textContent = `Daily Points: ${this.state.dailyPoints}/100`;
+        if (this.state.dailyPoints >= 100 && !this.state.dailyGoalAchieved) {
+          this.showAchievement('Daily Goal Achieved!');
+          this.state.dailyGoalAchieved = true;
+        }
+      }
+  
+      // यदि बचा हुआ समय 1 मिनट से कम है तो "X seconds left" और अन्यथा "X minutes Y seconds left" बोले
+      getRemainingTimeText(task) {
+        const now = Date.now();
+        const remaining = Math.max(task.endTime - now, 0);
+        const minutes = Math.floor(remaining / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+        return minutes === 0 ? `${seconds} seconds left` : `${minutes} minutes ${seconds} seconds left`;
+      }
+  
+      renderActiveTasks() {
+        const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
+        if (activeTasks.length === 0) {
+          this.taskList.innerHTML = `<p class="empty">No active missions. Add one!</p>`;
+          return;
+        }
+        this.taskList.innerHTML = activeTasks.map(task => `
+          <div class="task-item" data-id="${task.id}">
+            <div>
+              <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
+              <span class="task-text" id="taskText-${task.id}">${task.text}</span>
+              <input type="text" class="edit-input" id="editInput-${task.id}" style="display:none;" value="${task.text}">
+              <div class="deadline" id="deadline-${task.id}">
+                ${this.getRemainingTimeText(task)}
+              </div>
+              <div class="progress-bar">
+                <div class="progress" id="progress-${task.id}" style="width: ${task.progress}%"></div>
+              </div>
+            </div>
+            <div>
+              <button class="complete-task" data-id="${task.id}">✓</button>
+              <button class="abort-task" data-id="${task.id}">✕</button>
+              <button class="edit-task" data-id="${task.id}">Edit</button>
+              <button class="save-task" data-id="${task.id}" style="display:none;">Save</button>
+            </div>
+          </div>
+        `).join('');
+      }
+  
+      renderTaskHistory() {
+        const historyTasks = this.state.tasks.filter(task => task.completed || task.aborted);
+        if (historyTasks.length === 0) {
+          this.taskHistory.innerHTML = `<p class="empty">No completed or aborted missions yet.</p>`;
+          return;
+        }
+        this.taskHistory.innerHTML = historyTasks.map(task => {
+          let timingInfo = '';
+          if (task.completed && task.actualCompletionTime) {
+            const diff = task.actualCompletionTime - task.startTime;
+            const minutes = Math.floor(diff / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            timingInfo = `Completed in ${minutes} min ${seconds} sec from ${task.time} min`;
+          } else if (task.aborted) {
+            timingInfo = 'Aborted at ' + new Date(task.abortTime).toLocaleTimeString();
+          }
+          return `
+          <div class="task-item ${task.completed ? 'completed' : 'aborted'}" data-id="${task.id}">
+            <div>
+              <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
+              <span>${task.text}</span>
+              <div class="extra-details">
+                <div>Started: ${new Date(task.startTime).toLocaleString()}</div>
+                <div>${timingInfo}</div>
+              </div>
+            </div>
+            <div>
+              <button class="delete-task" data-id="${task.id}">✕</button>
+            </div>
+          </div>
+        `;
+        }).join('');
+      }
+  
+      renderNotes() {
+        if (this.state.notes.length === 0) {
+          this.noteHistory.innerHTML = `<p class="empty">No encrypted notes yet.</p>`;
+          return;
+        }
+        this.noteHistory.innerHTML = this.state.notes.map(note => `
+          <div class="note-item" data-id="${note.id}">
+            <div>
+              <div class="timestamp">${note.timestamp}</div>
+              <div>${note.showDecrypted ? atob(note.text) : note.text}</div>
+            </div>
+            <button class="toggle-note" data-id="${note.id}">${note.showDecrypted ? 'Hide' : 'Show'}</button>
+          </div>
+        `).join('');
+      }
+  
+      updateUI() {
+        this.renderActiveTasks();
+        this.renderTaskHistory();
+        this.renderNotes();
+      }
+  
+      toggleHistory() {
+        if (this.taskHistoryWrapper.classList.contains('open')) {
+          this.taskHistoryWrapper.classList.remove('open');
+          this.toggleHistoryBtn.textContent = "Show Task History";
+        } else {
+          this.taskHistoryWrapper.classList.add('open');
+          this.toggleHistoryBtn.textContent = "Hide Task History";
+        }
+      }
+  
+      toggleNotes() {
+        const notesContainer = document.getElementById("notesContainer");
+        if (notesContainer.style.display === "none") {
+          notesContainer.style.display = "block";
+          this.toggleNotesBtn.textContent = "Hide Notes";
+        } else {
+          notesContainer.style.display = "none";
+          this.toggleNotesBtn.textContent = "Show Notes";
+        }
+      }
+  
+      toggleSettings() {
+        if (this.settingsContainer.style.display === "none") {
+          this.settingsContainer.style.display = "block";
+        } else {
+          this.settingsContainer.style.display = "none";
+        }
+      }
+  
+      clearHistory() {
+        this.state.tasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
+        this.updateUI();
+        this.saveState();
+        this.showAchievement('Task history cleared!');
+      }
+  
+      resetDailyPoints() {
+        this.state.dailyPoints = 0;
+        this.state.dailyGoalAchieved = false;
+        this.updateRewardPointsDisplay();
+        this.saveState();
+        this.showAchievement('Daily points reset!');
+      }
+  
+      editTask(id) {
+        const taskTextElem = document.getElementById(`taskText-${id}`);
+        const editInput = document.getElementById(`editInput-${id}`);
+        const editBtn = document.querySelector(`.edit-task[data-id="${id}"]`);
+        const saveBtn = document.querySelector(`.save-task[data-id="${id}"]`);
+        if (taskTextElem && editInput && editBtn && saveBtn) {
+          taskTextElem.style.display = "none";
+          editInput.style.display = "inline-block";
+          editBtn.style.display = "none";
+          saveBtn.style.display = "inline-block";
+        }
+      }
+  
+      saveEditedTask(id) {
+        const editInput = document.getElementById(`editInput-${id}`);
+        const taskTextElem = document.getElementById(`taskText-${id}`);
+        const editBtn = document.querySelector(`.edit-task[data-id="${id}"]`);
+        const saveBtn = document.querySelector(`.save-task[data-id="${id}"]`);
+        if (editInput && taskTextElem && editBtn && saveBtn) {
+          const newText = editInput.value.trim();
+          if (newText) {
+            const task = this.state.tasks.find(t => t.id === id);
+            task.text = newText;
+            this.saveState();
+            this.updateUI();
           }
         }
+      }
   
-        saveEditedTask(id) {
-          const editInput = document.getElementById(`editInput-${id}`);
-          const taskTextElem = document.getElementById(`taskText-${id}`);
-          const editBtn = document.querySelector(`.edit-task[data-id="${id}"]`);
-          const saveBtn = document.querySelector(`.save-task[data-id="${id}"]`);
-          if (editInput && taskTextElem && editBtn && saveBtn) {
-            const newText = editInput.value.trim();
-            if (newText) {
-              const task = this.state.tasks.find(t => t.id === id);
-              task.text = newText;
-              this.saveState();
-              this.updateUI();
-            }
-          }
-        }
-  
-        startProgressUpdateLoop() {
-          const updateProgress = () => {
-            const now = Date.now();
-            let stateUpdated = false;
-            this.state.tasks.forEach(task => {
-              if (!task.completed && !task.aborted) {
-                const totalTime = task.endTime - task.startTime;
-                const elapsed = now - task.startTime;
-                const progress = Math.min((elapsed / totalTime) * 100, 100);
-                if (progress !== task.progress) {
-                  task.progress = progress;
-                  stateUpdated = true;
+      // प्रगति अपडेट लूप: रियल-टाइम अपडेट और वॉइस नोटिफिकेशन ट्रिगर
+      startProgressUpdateLoop() {
+        const updateProgress = () => {
+          const now = Date.now();
+          this.state.tasks.forEach(task => {
+            if (!task.completed && !task.aborted) {
+              const totalTime = task.endTime - task.startTime;
+              const elapsed = now - task.startTime;
+              const progress = Math.min((elapsed / totalTime) * 100, 100);
+              task.progress = progress;
+              const progressElem = document.getElementById(`progress-${task.id}`);
+              if (progressElem) {
+                progressElem.style.width = `${progress}%`;
+              }
+              const deadlineElem = document.getElementById(`deadline-${task.id}`);
+              if (deadlineElem) {
+                deadlineElem.textContent = progress < 100 ? this.getRemainingTimeText(task) : 'Completed';
+              }
+              if (this.config.voiceEnabled) {
+                if (!task.beep50 && progress >= 50) {
+                  task.beep50 = true;
+                  const remaining = this.getRemainingTimeText(task);
+                  console.log(`50% reached for task ${task.id}. Remaining time: ${remaining}`);
+                  this.speakMessage(`Hey ANAS, you're at 50% progress. ${remaining}`);
                 }
-                const progressElem = document.getElementById(`progress-${task.id}`);
-                if (progressElem) {
-                  progressElem.style.width = `${progress}%`;
+                if (!task.beep70 && progress >= 70) {
+                  task.beep70 = true;
+                  const remaining = this.getRemainingTimeText(task);
+                  console.log(`70% reached for task ${task.id}. Remaining time: ${remaining}`);
+                  this.speakMessage(`Hey ANAS, you're at 70% progress. ${remaining}`);
                 }
-                const deadlineElem = document.getElementById(`deadline-${task.id}`);
-                if (deadlineElem) {
-                  deadlineElem.textContent = progress < 100 ? this.getRemainingTimeText(task) : 'Completed';
-                }
-             
-                if (this.config.voiceEnabled) {
-                  if (!task.beep50 && progress >= 50) {
-                    task.beep50 = true;
-                    this.speakMessage('Hey ANAS You are at 50% YOU CAN DO IT');
-                  }
-                  if (!task.beep70 && progress >= 70) {
-                    task.beep70 = true;
-                    this.speakMessage(' Hey ANAS You are at 70% YOU CAN DO IT');
-                  }
-                  if (!task.beep90 && progress >= 90) {
-                    task.beep90 = true;
-                    this.speakMessage('Hey ANAS You are at 90% AND YOU ARE AT FINISHING TIME');
-                  }
-                }
-                if (progress >= 100 && !task.completed && !task.prompted) {
-                  task.prompted = true;
-                  this.playSound('timer.mp3');
-                  if (Notification.permission === "granted") {
-                    new Notification("Task Timer Finished", { 
-                      body: `Task: ${task.text}\nDid you complete the task?`
-                    });
-                  }
-                  const userConfirmed = confirm(`The timer for "${task.text}" is finished.\nDid you complete the task?`);
-                  if (userConfirmed) {
-                    this.completeTask(task.id);
-                  } else {
-                    this.state.rewardPoints -= 20;
-                    this.state.dailyPoints -= 20;
-                    task.aborted = true;
-                    task.abortTime = Date.now();
-                    this.updateUI();
-                    this.updateRewardPointsDisplay();
-                    this.saveState();
-                  }
+                if (!task.beep90 && progress >= 90) {
+                  task.beep90 = true;
+                  const remaining = this.getRemainingTimeText(task);
+                  console.log(`90% reached for task ${task.id}. Remaining time: ${remaining}`);
+                  this.speakMessage(`Hey ANAS, you're at 90% progress. ${remaining}`);
                 }
               }
-            });
-
-            if (stateUpdated) this.saveState();
-            requestAnimationFrame(updateProgress);
-          };
+              if (progress >= 100 && !task.completed && !task.prompted) {
+                task.prompted = true;
+                this.playSound('timer.mp3');
+                if (Notification.permission === "granted") {
+                  new Notification("Task Timer Finished", { 
+                    body: `Task: ${task.text}\nDid you complete the task?`
+                  });
+                }
+                const userConfirmed = confirm(`The timer for "${task.text}" is finished.\nDid you complete the task?`);
+                if (userConfirmed) {
+                  this.completeTask(task.id);
+                } else {
+                  this.state.rewardPoints -= 20;
+                  this.state.dailyPoints -= 20;
+                  task.aborted = true;
+                  task.abortTime = Date.now();
+                  this.updateUI();
+                  this.updateRewardPointsDisplay();
+                  this.saveState();
+                }
+              }
+            }
+          });
           requestAnimationFrame(updateProgress);
-        }
+        };
+        requestAnimationFrame(updateProgress);
+      }
   
-        playSound(src) {
-          const audio = new Audio(src);
-          audio.loop = false;
-          audio.play();
-        }
+      playSound(src) {
+        const audio = new Audio(src);
+        audio.loop = false;
+        audio.play();
+      }
   
-        speakMessage(message) {
+      speakMessage(message) {
+        if ('speechSynthesis' in window) {
           const utterance = new SpeechSynthesisUtterance(message);
+          utterance.lang = 'en-US';
           utterance.rate = 1;
+          utterance.volume = 1;
           speechSynthesis.speak(utterance);
+        } else {
+          console.log("Speech Synthesis not supported in this browser.");
         }
+      }
   
-        showAchievement(message) {
-          const achievement = document.createElement('div');
-          achievement.textContent = message;
-          achievement.style.position = 'fixed';
-          achievement.style.top = '20px';
-          achievement.style.right = '20px';
-          achievement.style.background = 'var(--neon-pink)';
-          achievement.style.padding = '10px 20px';
-          achievement.style.borderRadius = '5px';
-          achievement.style.boxShadow = 'var(--glow)';
-          achievement.style.zIndex = 1000;
-          document.body.appendChild(achievement);
-          setTimeout(() => achievement.remove(), 3000);
+      showAchievement(message) {
+        const achievement = document.createElement('div');
+        achievement.textContent = message;
+        achievement.style.position = 'fixed';
+        achievement.style.top = '20px';
+        achievement.style.right = '20px';
+        achievement.style.background = 'var(--neon-pink)';
+        achievement.style.padding = '10px 20px';
+        achievement.style.borderRadius = '5px';
+        achievement.style.boxShadow = 'var(--glow)';
+        achievement.style.zIndex = 1000;
+        document.body.appendChild(achievement);
+        setTimeout(() => achievement.remove(), 3000);
+      }
+  
+      showCelebration(message) {
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            confetti({
+              particleCount: 100,
+              spread: 120,
+              origin: { x: Math.random(), y: Math.random() }
+            });
+          }, i * 200);
         }
+        const flash = document.createElement('div');
+        flash.style.position = 'fixed';
+        flash.style.top = '0';
+        flash.style.left = '0';
+        flash.style.width = '100%';
+        flash.style.height = '100%';
+        flash.style.background = 'rgba(255,255,255,0.3)';
+        flash.style.zIndex = '999';
+        flash.style.opacity = '1';
+        flash.style.transition = 'opacity 1s ease-out';
+        document.body.appendChild(flash);
+        setTimeout(() => { flash.style.opacity = '0'; }, 100);
+        setTimeout(() => { flash.remove(); }, 1100);
   
-        showCelebration(message) {
-          for (let i = 0; i < 3; i++) {
-            setTimeout(() => {
-              confetti({
-                particleCount: 100,
-                spread: 120,
-                origin: { x: Math.random(), y: Math.random() }
-              });
-            }, i * 200);
-          }
-          const flash = document.createElement('div');
-          flash.style.position = 'fixed';
-          flash.style.top = '0';
-          flash.style.left = '0';
-          flash.style.width = '100%';
-          flash.style.height = '100%';
-          flash.style.background = 'rgba(255,255,255,0.3)';
-          flash.style.zIndex = '999';
-          flash.style.opacity = '1';
-          flash.style.transition = 'opacity 1s ease-out';
-          document.body.appendChild(flash);
-          setTimeout(() => { flash.style.opacity = '0'; }, 100);
-          setTimeout(() => { flash.remove(); }, 1100);
-          
-          const celebration = document.createElement('div');
-          celebration.textContent = message;
-          celebration.style.position = 'fixed';
-          celebration.style.top = '50%';
-          celebration.style.left = '50%';
-          celebration.style.transform = 'translate(-50%, -50%) scale(0)';
-          celebration.style.background = 'linear-gradient(45deg, #ff0080, #ff8c00)';
-          celebration.style.padding = '40px 60px';
-          celebration.style.borderRadius = '15px';
-          celebration.style.boxShadow = '0 0 40px rgba(255,255,255,0.8)';
-          celebration.style.zIndex = '1000';
-          celebration.style.fontSize = '3rem';
-          celebration.style.color = '#ffffff';
-          celebration.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
+        const celebration = document.createElement('div');
+        celebration.textContent = message;
+        celebration.style.position = 'fixed';
+        celebration.style.top = '50%';
+        celebration.style.left = '50%';
+        celebration.style.transform = 'translate(-50%, -50%) scale(0)';
+        celebration.style.background = 'linear-gradient(45deg, #ff0080, #ff8c00)';
+        celebration.style.padding = '40px 60px';
+        celebration.style.borderRadius = '15px';
+        celebration.style.boxShadow = '0 0 40px rgba(255,255,255,0.8)';
+        celebration.style.zIndex = '1000';
+        celebration.style.fontSize = '3rem';
+        celebration.style.color = '#ffffff';
+        celebration.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
+        celebration.style.opacity = '0';
+        document.body.appendChild(celebration);
+        setTimeout(() => {
+          celebration.style.transform = 'translate(-50%, -50%) scale(1)';
+          celebration.style.opacity = '1';
+        }, 100);
+        setTimeout(() => {
+          celebration.style.transform = 'translate(-50%, -50%) scale(0.5)';
           celebration.style.opacity = '0';
-          document.body.appendChild(celebration);
-          setTimeout(() => {
-            celebration.style.transform = 'translate(-50%, -50%) scale(1)';
-            celebration.style.opacity = '1';
-          }, 100);
-          setTimeout(() => {
-            celebration.style.transform = 'translate(-50%, -50%) scale(0.5)';
-            celebration.style.opacity = '0';
-          }, 2000);
-          setTimeout(() => { celebration.remove(); }, 2500);
-        }
+        }, 2000);
+        setTimeout(() => { celebration.remove(); }, 2500);
+      }
   
-        requestNotificationPermission() {
-          if ("Notification" in window && Notification.permission !== "granted") {
-            Notification.requestPermission();
+      requestNotificationPermission() {
+        if ("Notification" in window && Notification.permission !== "granted") {
+          Notification.requestPermission();
+        }
+      }
+  
+      initBackgroundAudio() {
+        if (window.AudioContext || window.webkitAudioContext) {
+          try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') {
+              audioCtx.resume();
+            }
+          } catch (e) {
+            console.error("AudioContext initialization failed:", e);
           }
         }
+      }
   
-        initBackgroundAudio() {
-          if (window.AudioContext || window.webkitAudioContext) {
-            try {
+      setupVisibilityChange() {
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'hidden') {
+            if (Notification.permission === "granted") {
+              new Notification("You're off-task", {
+                body: "Come back and complete your missions!"
+              });
+            }
+          }
+          if (document.visibilityState === 'visible') {
+            if (window.AudioContext || window.webkitAudioContext) {
               const AudioContext = window.AudioContext || window.webkitAudioContext;
               const audioCtx = new AudioContext();
               if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
               }
-            } catch (e) {
-              console.error("AudioContext initialization failed:", e);
             }
-          }
-        }
-  
-        setupVisibilityChange() {
-          document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden') {
-              if (Notification.permission === "granted") {
-                new Notification("You're off-task", {
-                  body: "Come back and complete your missions!"
-                });
-              }
-            }
-            if (document.visibilityState === 'visible') {
-              if (window.AudioContext || window.webkitAudioContext) {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                const audioCtx = new AudioContext();
-                if (audioCtx.state === 'suspended') {
-                  audioCtx.resume();
-                }
-              }
-            }
-          });
-        }
-  
-       
-       
-        
-        startBeepReminder() {
-          if (this.beepTimeout) {
-            clearTimeout(this.beepTimeout);
-          }
-        
-          const beepFunction = () => {
-            const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
-        
-            if (activeTasks.length > 0) {
-              console.log("Beep! 🔊"); // Debugging ke liye
-              this.playSound('beep.mp3');
-            }
-        
-            // अगला beep **सटीक 7 मिनट** बाद बजेगा
-            this.beepTimeout = setTimeout(beepFunction, 7 * 60 * 1000);
-          };
-        
-          // सबसे पहले function call करो
-          beepFunction();
-        }
-        
-        componentWillUnmount() {
-          if (this.beepTimeout) {
-            clearTimeout(this.beepTimeout);
-          }
-        }
-      }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-          const app = new DarkProductivityApp();
-        
-          if (typeof particlesJS !== "undefined") {
-            particlesJS('particles-js', {
-              particles: {
-                number: { value: 150 },
-                color: { value: '#8a2be2' },
-                shape: { type: 'circle' },
-                opacity: { value: 0.5 },
-                size: { value: 2 },
-                move: {
-                  enable: true,
-                  speed: 1.5,
-                  direction: 'none',
-                  random: true,
-                  straight: false,
-                  out_mode: 'bounce',
-                  bounce: true
-                }
-              },
-              interactivity: {
-                detect_on: 'canvas',
-                events: {
-                  onhover: { enable: true, mode: 'grab' },
-                  onclick: { enable: true, mode: 'push' },
-                  resize: true
-                }
-              }
-            });
-          } else {
-            console.error("particlesJS is not loaded!");
           }
         });
-        
-    </script>
+      }
+  
+      startBeepReminder() {
+        if (this.beepTimeout) {
+          clearTimeout(this.beepTimeout);
+        }
+      
+        const beepFunction = () => {
+          const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
+          if (activeTasks.length > 0) {
+            console.log("Beep! 🔊");
+            this.playSound('beep.mp3');
+          }
+          this.beepTimeout = setTimeout(beepFunction, 7 * 60 * 1000); // 7 मिनट बाद अगला beep
+        };
+        beepFunction();
+      }
+  
+      componentWillUnmount() {
+        if (this.beepTimeout) {
+          clearTimeout(this.beepTimeout);
+        }
+      }
+    }
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      const app = new DarkProductivityApp();
+  
+      if (typeof particlesJS !== "undefined") {
+        particlesJS('particles-js', {
+          particles: {
+            number: { value: 150 },
+            color: { value: '#8a2be2' },
+            shape: { type: 'circle' },
+            opacity: { value: 0.5 },
+            size: { value: 2 },
+            move: {
+              enable: true,
+              speed: 1.5,
+              direction: 'none',
+              random: true,
+              straight: false,
+              out_mode: 'bounce',
+              bounce: true
+            }
+          },
+          interactivity: {
+            detect_on: 'canvas',
+            events: {
+              onhover: { enable: true, mode: 'grab' },
+              onclick: { enable: true, mode: 'push' },
+              resize: true
+            }
+          }
+        });
+      } else {
+        console.error("particlesJS is not loaded!");
+      }
+    });
+  </script>
+  
 </body>
 </html>
