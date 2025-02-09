@@ -25,7 +25,6 @@
       --radius-sm: 6px;
       --gutter: 32px;
     }
-    /* Dark Theme Overrides */
     [data-theme="dark"] {
       --bg-color: hsl(240, 15%, 8%);
       --text-color: hsl(240, 10%, 90%);
@@ -35,12 +34,15 @@
     }
 
     /* ====================================
-       Reset & Base Styles
+       Reset, Base Styles & Smooth Scrolling
     ==================================== */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+    html {
+      scroll-behavior: smooth;
     }
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -53,29 +55,52 @@
       transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      overflow-y: auto;
+      position: relative;
+      padding-bottom: 60px; /* Space for back-to-top button */
     }
 
     /* ====================================
-       Sidebar Styles
+       Custom Scrollbar Styling
+    ==================================== */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-color);
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: var(--primary-accent);
+      border-radius: 4px;
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary-accent) var(--bg-color);
+    }
+
+    /* ====================================
+       Sidebar Styles with Slide-In Animation
     ==================================== */
     .sidebar {
       position: fixed;
       top: 0;
-      left: -280px; /* Hidden by default */
+      left: 0;
       width: var(--sidebar-width);
       height: 100vh;
       background: var(--sidebar-bg);
       padding: 1.5rem;
-      transition: left var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 1000;
       backdrop-filter: blur(12px);
       border-right: 1px solid var(--glass-bg);
+      transform: translateX(-110%);
     }
     .sidebar.active {
-      left: 0;
+      transform: translateX(0);
     }
     .sidebar-header {
-      padding-bottom: 2rem;
+      padding-bottom: 1rem;
       border-bottom: 1px solid var(--glass-bg);
       margin-bottom: 1.5rem;
     }
@@ -86,6 +111,11 @@
       color: white;
       font-size: 1.5rem;
       font-weight: 600;
+      cursor: pointer;
+      transition: transform var(--transition-speed);
+    }
+    .brand:hover {
+      transform: scale(1.05);
     }
     .brand-icon {
       width: 40px;
@@ -94,6 +124,57 @@
       border-radius: var(--radius-md);
       display: grid;
       place-items: center;
+      transition: box-shadow var(--transition-speed);
+    }
+    .brand:hover .brand-icon {
+      box-shadow: 0 0 10px var(--primary-accent);
+    }
+    /* ------------------------------------
+       User Profile Card
+    ------------------------------------ */
+    .user-profile {
+      display: flex;
+      align-items: center;
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .user-profile img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-accent);
+      margin-right: 0.75rem;
+    }
+    .user-profile span {
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    /* ------------------------------------
+       Sidebar Search Box
+    ------------------------------------ */
+    .search-box {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: var(--radius-md);
+      outline: none;
+      background: var(--glass-bg);
+      color: #fff;
+    }
+    .search-box input::placeholder {
+      color: #ddd;
+    }
+    .search-box i {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #ddd;
     }
     .nav-list {
       display: flex;
@@ -103,7 +184,7 @@
     .nav-item {
       position: relative;
       border-radius: var(--radius-md);
-      transition: background var(--transition-speed) ease;
+      transition: background var(--transition-speed) ease, transform var(--transition-speed) ease;
     }
     .nav-item a {
       color: rgba(255, 255, 255, 0.9);
@@ -114,9 +195,11 @@
       gap: 1rem;
       font-size: 0.95rem;
       border-radius: var(--radius-md);
+      transition: background var(--transition-speed);
     }
     .nav-item:hover {
       background: var(--hover-bg);
+      transform: translateX(5px);
     }
     .nav-item.active {
       background: var(--primary-accent);
@@ -161,6 +244,8 @@
       top: 20px;
       right: 20px;
       z-index: 1100;
+      display: flex;
+      gap: 10px;
     }
     .toggle-btn {
       background: var(--glass-bg);
@@ -180,6 +265,11 @@
       background: var(--primary-accent);
       color: white;
     }
+    /* Notifications Panel Toggle Button */
+    .notif-toggle {
+      background: var(--glass-bg);
+      color: var(--text-color);
+    }
 
     /* ====================================
        Main Content & Iframe
@@ -195,6 +285,7 @@
       position: relative;
       overflow: auto;
       min-height: 600px;
+      scroll-behavior: smooth;
     }
     .frame-container::before {
       content: '';
@@ -210,14 +301,14 @@
       border-radius: var(--radius-xl);
       min-height: 600px;
       display: block;
+      transition: opacity var(--transition-speed);
     }
 
     /* ====================================
        Loader Animation (Rotating Hourglass)
-       This loader appears on all page navigations (including the initial load)
     ==================================== */
     .loading {
-      display: none; /* hidden by default */
+      display: none;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -267,15 +358,82 @@
     }
 
     /* ====================================
+       Back-to-Top Button
+    ==================================== */
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary-accent);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 1100;
+    }
+    .back-to-top.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ====================================
+       Notifications Panel
+    ==================================== */
+    .notifications-panel {
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      width: 320px;
+      max-height: 80vh;
+      background: var(--bg-color);
+      color: var(--text-color);
+      box-shadow: var(--shadow-lg);
+      border-radius: var(--radius-md);
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform var(--transition-speed) ease;
+      z-index: 1100;
+      padding: 1rem;
+    }
+    .notifications-panel.active {
+      transform: translateX(0);
+    }
+    .notifications-panel h3 {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--glass-bg);
+      padding-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+    .notif-list {
+      list-style: none;
+    }
+    .notif-list li {
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--glass-bg);
+      transition: background var(--transition-speed);
+    }
+    .notif-list li:hover {
+      background: var(--hover-bg);
+    }
+
+    /* ====================================
        Responsive Adjustments
     ==================================== */
     @media (max-width: 767px) {
       .sidebar {
         width: 240px;
-        left: -240px;
+        transform: translateX(-110%);
       }
       .sidebar.active {
-        left: 0;
+        transform: translateX(0);
       }
       .sidebar-toggle,
       .toggle-btn {
@@ -283,7 +441,6 @@
         height: 40px;
       }
     }
-    
   </style>
   <!-- Font Awesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -295,8 +452,11 @@
     <i class="fas fa-bars"></i>
   </button>
 
-  <!-- Theme Toggle Button -->
+  <!-- Toggle Container (Notifications & Theme) -->
   <div class="toggle-container">
+    <button class="toggle-btn notif-toggle" data-action="notif">
+      <i class="fas fa-bell"></i>
+    </button>
     <button class="toggle-btn" data-action="theme">
       <i class="fas fa-earth"></i>
     </button>
@@ -304,6 +464,17 @@
 
   <!-- Overlay (click to hide sidebar) -->
   <div class="overlay" onclick="closeSidebar()"></div>
+
+  <!-- Notifications Panel -->
+  <div class="notifications-panel" id="notificationsPanel">
+    <h3>Notifications</h3>
+    <ul class="notif-list">
+      <li>Notification 1: Lorem ipsum dolor sit amet.</li>
+      <li>Notification 2: Consectetur adipiscing elit.</li>
+      <li>Notification 3: Sed do eiusmod tempor incididunt.</li>
+      <li>Notification 4: Ut labore et dolore magna aliqua.</li>
+    </ul>
+  </div>
 
   <!-- Sidebar Navigation -->
   <nav class="sidebar" id="sidebar">
@@ -314,18 +485,28 @@
         </div>
         <span>ANAS</span>
       </div>
+      <!-- User Profile Card -->
+      <div class="user-profile">
+        <img src="imagee.jpg" alt="User Avatar">
+        <span>ANAS MEMON</span>
+      </div>
+    </div>
+    <!-- Sidebar Search Box -->
+    <div class="search-box">
+      <input type="text" placeholder="Search..." />
+      <i class="fas fa-search"></i>
     </div>
     <ul class="nav-list">
       <li class="nav-item active">
         <a href="#" onclick="loadPage('home.html')">
           <i class="fas fa-circle-check"></i>
-          <span>✨ ABOUT MY SELF ✨ </span>
+          <span>✨ ABOUT MY SELF ✨</span>
         </a>
       </li>
       <li class="nav-item">
         <a href="#" onclick="loadPage('nn.html')">
           <i class="fas fa-bars-progress"></i>
-          <span>✨ daily time table✨ </span>
+          <span>✨ Daily Time Table ✨</span>
         </a>
       </li>
       <li class="nav-item">
@@ -337,13 +518,13 @@
       <li class="nav-item">
         <a href="#" onclick="loadPage('settings.html')">
           <i class="fas fa-bars-progress"></i>
-          <span>✨ ROUTINE PROGRESS ✨ </span>
+          <span>✨ Routine Progress ✨</span>
         </a>
       </li>
       <li class="nav-item">
         <a href="#" onclick="loadPage('ui.html')">
           <i class="fas fa-chart-column"></i>
-          <span>✨ DEADLINE TRACKER ✨ </span>
+          <span>✨ Deadline Tracker ✨</span>
         </a>
       </li>
       <li class="nav-item">
@@ -368,13 +549,21 @@
     </div>
   </div>
 
+  <!-- Back-to-Top Button -->
+  <button class="back-to-top" id="backToTop">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
   <script>
     const sidebar = document.getElementById('sidebar');
     const overlay = document.querySelector('.overlay');
     const themeBtn = document.querySelector('[data-action="theme"]');
+    const notifBtn = document.querySelector('.notif-toggle');
+    const notificationsPanel = document.getElementById('notificationsPanel');
     const htmlElement = document.documentElement;
     const loader = document.getElementById('loader');
     const frame = document.getElementById('contentFrame');
+    const backToTopBtn = document.getElementById('backToTop');
 
     let hideTimeout;
 
@@ -418,15 +607,24 @@
     }
     themeBtn.addEventListener('click', toggleTheme);
 
+    // Toggle Notifications Panel
+    notifBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notificationsPanel.classList.toggle('active');
+    });
+    document.addEventListener('click', (e) => {
+      if (!notificationsPanel.contains(e.target) && !notifBtn.contains(e.target)) {
+        notificationsPanel.classList.remove('active');
+      }
+    });
+
     // Load a page into the iframe with a loading state and auto-resize
     function loadPage(page) {
-      // Always show loader on any navigation
       loader.classList.add('show');
       frame.style.opacity = '0';
       setTimeout(() => {
         frame.src = page;
         frame.onload = () => {
-          // Hide loader smoothly
           loader.classList.remove('show');
           frame.style.opacity = '1';
           // Auto-resize iframe height if same-origin
@@ -454,6 +652,18 @@
     // On initial window load, load the home page via our loader mechanism
     window.addEventListener('load', () => {
       loadPage('home.html');
+    });
+
+    // Back-to-Top Button Functionality
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.classList.add('show');
+      } else {
+        backToTopBtn.classList.remove('show');
+      }
+    });
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   </script>
 </body>
