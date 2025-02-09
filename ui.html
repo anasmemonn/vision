@@ -12,7 +12,7 @@
       --dark-bg: #000000; /* Deep space black */
       --neon-purple: #00c7ea; /* More vibrant purple */
       --neon-magenta: #FF00FF; /* Replaced pink with neon magenta */
-      --neon-blue: #949c07a9; /* Cyan blue */
+      --neon-blue: #dae40da9; /* Cyan blue */
       --accent: #00ffcc; /* Bright teal */
       --hologram-green: #39ff14; /* More intense matrix green */
       --cyber-yellow: #ffd700; /* Futuristic gold */
@@ -252,12 +252,29 @@ button:hover {
     }
 
     .container {
-      position: relative;
-      z-index: 2;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
+      max-height: 1000px; /* जितना कंटेंट दिखाना हो उतना सेट करें */
+      overflow-y: auto; /* सिर्फ Y-स्क्रॉल को एक्टिवेट करें */
+      scrollbar-width: thin; /* फायरफॉक्स के लिए */
+      scrollbar-color: var(--neon-purple) var(--dark-bg); /* कस्टम स्क्रॉलबार */
+      
+      width: 100%; /* कंटेनर की चौड़ाई कम करें */
+      max-width: 1500px; /* मैक्सिमम चौड़ाई सेट करें */
+      margin: auto; /* सेंटर में लाने के लिए */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+    
+    /* कस्टम स्क्रॉलबार स्टाइल (क्रोम, एज, सफारी के लिए) */
+    .container::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    .container::-webkit-scrollbar-thumb {
+      background: var(--neon-purple);
+      border-radius: 10px;
+    }
+    
 
     .panel {
       background: var(--panel-bg);
@@ -407,8 +424,8 @@ button:hover {
       margin-bottom: 0.5rem;
       display: inline-block;
     }
-    .low { background: rgba(1, 255, 132, 0.95); }
-    .medium { background: rgba(255,214,0,0.2); }
+    .low { background: rgba(0, 177, 92, 0.95); }
+    .medium { background: rgba(190, 29, 0, 0.2); }
     .high { background: rgba(255,23,68,0.2); }
 
     .deadline {
@@ -481,19 +498,20 @@ button:hover {
     /* Settings Icon */
     #settingsIcon {
       position: fixed;
-      top: 750px;
+      top: 800px;
       right: 10px;
       font-size: 2rem;
       cursor: pointer;
       z-index: 1001;
+      grid-auto-flow: 1px;
     }
     
     /* Settings container */
     #settingsContainer {
       display: none;
       position: fixed;
-      top: 50px;
-      right: 10px;
+      top: 90px;
+      right: -10px;
       background: var(--panel-bg);
       border: 1px solid var(--neon-purple);
       padding: 1rem;
@@ -643,6 +661,15 @@ button:hover {
   <script>
     class DarkProductivityApp {
       constructor() {
+        // ऑडियो फाइलों को प्री-लोड करें
+        this.sounds = {
+          fifty: new Audio('50.mp3'),
+          seventy: new Audio('70.mp3'),
+          ninety: new Audio('90.mp3'),
+          beep: new Audio('beep.mp3'),
+          timer: new Audio('timer.mp3')
+        };
+  
         this.state = {
           tasks: JSON.parse(localStorage.getItem('tasks')) || [],
           notes: JSON.parse(localStorage.getItem('notes')) || [],
@@ -651,6 +678,7 @@ button:hover {
           dailyDate: localStorage.getItem('dailyDate') || new Date().toLocaleDateString(),
           dailyGoalAchieved: false
         };
+  
         // यदि localStorage में voiceEnabled की कोई value न हो तो डिफ़ॉल्ट true रखें
         this.config = {
           voiceEnabled: (localStorage.getItem('voiceEnabled') === null)
@@ -671,7 +699,7 @@ button:hover {
         this.bindEvents();
         this.updateUI();
         this.updateRewardPointsDisplay();
-        this.startProgressUpdateLoop();
+        this.startProgressUpdateLoop(); // अपडेटेड लूप (setInterval का उपयोग)
         this.startBeepReminder();
         this.initBackgroundAudio();
         this.requestNotificationPermission();
@@ -716,7 +744,7 @@ button:hover {
         this.taskList.addEventListener('click', (e) => {
           if (e.target.classList.contains('complete-task')) {
             const id = Number(e.target.dataset.id);
-            this.playSound('timer.mp3');
+            this.playSound('timer');
             this.completeTask(id, true);
           } else if (e.target.classList.contains('abort-task')) {
             const id = Number(e.target.dataset.id);
@@ -788,7 +816,7 @@ button:hover {
         this.taskTime.value = '';
         this.updateUI();
         this.saveState();
-        this.playSound('timer.mp3');
+        this.playSound('timer');
         this.showAchievement('Timer started! Good luck!');
       }
   
@@ -806,7 +834,7 @@ button:hover {
           this.updateUI();
           this.updateRewardPointsDisplay();
           this.saveState();
-          this.playSound('timer.mp3');
+          this.playSound('timer');
           this.showCelebration('Mission Accomplished!');
         }
       }
@@ -1039,9 +1067,9 @@ button:hover {
         }
       }
   
-      // प्रगति अपडेट लूप: रियल-टाइम अपडेट और वॉइस नोटिफिकेशन ट्रिगर
+      // अपडेटेड प्रगति अपडेट लूप: setInterval का उपयोग (500ms में एक बार)
       startProgressUpdateLoop() {
-        const updateProgress = () => {
+        setInterval(() => {
           const now = Date.now();
           this.state.tasks.forEach(task => {
             if (!task.completed && !task.aborted) {
@@ -1060,26 +1088,23 @@ button:hover {
               if (this.config.voiceEnabled) {
                 if (!task.beep50 && progress >= 50) {
                   task.beep50 = true;
-                  const remaining = this.getRemainingTimeText(task);
-                  console.log(`50% reached for task ${task.id}. Remaining time: ${remaining}`);
-                  this.speakMessage(`Hey ANAS, you're at 50% progress. ${remaining}`);
+                  console.log(`50% reached for task ${task.id}.`);
+                  this.playSound('fifty');
                 }
                 if (!task.beep70 && progress >= 70) {
                   task.beep70 = true;
-                  const remaining = this.getRemainingTimeText(task);
-                  console.log(`70% reached for task ${task.id}. Remaining time: ${remaining}`);
-                  this.speakMessage(`Hey ANAS, you're at 70% progress. ${remaining}`);
+                  console.log(`70% reached for task ${task.id}.`);
+                  this.playSound('seventy');
                 }
                 if (!task.beep90 && progress >= 90) {
                   task.beep90 = true;
-                  const remaining = this.getRemainingTimeText(task);
-                  console.log(`90% reached for task ${task.id}. Remaining time: ${remaining}`);
-                  this.speakMessage(`Hey ANAS, you're at 90% progress. ${remaining}`);
+                  console.log(`90% reached for task ${task.id}.`);
+                  this.playSound('ninety');
                 }
               }
               if (progress >= 100 && !task.completed && !task.prompted) {
                 task.prompted = true;
-                this.playSound('timer.mp3');
+                this.playSound('timer');
                 if (Notification.permission === "granted") {
                   new Notification("Task Timer Finished", { 
                     body: `Task: ${task.text}\nDid you complete the task?`
@@ -1100,26 +1125,19 @@ button:hover {
               }
             }
           });
-          requestAnimationFrame(updateProgress);
-        };
-        requestAnimationFrame(updateProgress);
+        }, 500); // 500ms में एक बार अपडेट करें
       }
   
-      playSound(src) {
-        const audio = new Audio(src);
-        audio.loop = false;
-        audio.play();
-      }
-  
-      speakMessage(message) {
-        if ('speechSynthesis' in window) {
-          const utterance = new SpeechSynthesisUtterance(message);
-          utterance.lang = 'en-US';
-          utterance.rate = 1;
-          utterance.volume = 1;
-          speechSynthesis.speak(utterance);
+      // playSound अब प्री-लोडेड ऑडियो से काम करता है
+      playSound(name) {
+        if (this.sounds[name]) {
+          // साउंड को शुरुआत से प्ले करने के लिए currentTime सेट करें
+          this.sounds[name].currentTime = 0;
+          this.sounds[name].play().catch((error) => {
+            console.error("Error playing sound:", error);
+          });
         } else {
-          console.log("Speech Synthesis not supported in this browser.");
+          console.warn("Sound not found:", name);
         }
       }
   
@@ -1239,7 +1257,7 @@ button:hover {
           const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
           if (activeTasks.length > 0) {
             console.log("Beep! 🔊");
-            this.playSound('beep.mp3');
+            this.playSound('beep');
           }
           this.beepTimeout = setTimeout(beepFunction, 7 * 60 * 1000); // 7 मिनट बाद अगला beep
         };
@@ -1287,7 +1305,25 @@ button:hover {
         console.error("particlesJS is not loaded!");
       }
     });
+    
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+          console.log("Page is in background");
+      } else {
+          console.log("Page is active");
+      }
+    });
+    
+    document.addEventListener("click", () => {
+      Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+              new Notification("Website will run in the background!");
+          }
+      });
+    });
   </script>
+  
+  
   
 </body>
 </html>
